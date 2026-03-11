@@ -80,7 +80,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Tamam
+  m_text: Okay
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6d6741c16d40181438e917406c5aa8a4, type: 2}
   m_sharedMaterial: {fileID: -961697221030898517, guid: 6d6741c16d40181438e917406c5aa8a4, type: 2}
@@ -254,7 +254,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8080903699695479606
 Transform:
   m_ObjectHideFlags: 0
@@ -702,7 +702,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5598723930840066931, guid: aecf7b59cbab7af46bdca61fcc048335, type: 3}
       propertyPath: m_text
-      value: Son
+      value: Ending
       objectReference: {fileID: 0}
     - target: {fileID: 5598723930840066931, guid: aecf7b59cbab7af46bdca61fcc048335, type: 3}
       propertyPath: m_fontSize
