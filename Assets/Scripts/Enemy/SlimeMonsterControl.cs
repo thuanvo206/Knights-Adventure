@@ -7,13 +7,13 @@ public class SlimeMonsterControl : MonoBehaviour
     Rigidbody2D enemyBody2D;
     public float enemySpeed;
 
-    [Tooltip("Enemy'nin duvara çarpýp çarpmadýðýnýn bilgisini tutar.")]
+    [Tooltip("Enemy'nin duvara ï¿½arpï¿½p ï¿½arpmadï¿½ï¿½ï¿½nï¿½n bilgisini tutar.")]
     bool isGround = true;
 
     Transform groundCheck;
     const float GroundCheckRadius = .1f;
 
-    [Tooltip("Duvar layer'ýný belirler.")]
+    [Tooltip("Duvar layer'ï¿½nï¿½ belirler.")]
     public LayerMask groundLayer;
 
     public bool moveRight;
@@ -38,7 +38,7 @@ public class SlimeMonsterControl : MonoBehaviour
         if (isGround || !onEdge)
             moveRight = !moveRight;
 
-        enemyBody2D.velocity = (moveRight) ? new Vector2(enemySpeed, 0) : new Vector2(-enemySpeed, 0);
+        enemyBody2D.linearVelocity = (moveRight) ? new Vector2(enemySpeed, 0) : new Vector2(-enemySpeed, 0);
         transform.localScale = (moveRight) ? new Vector2(-1, 1) : new Vector2(1, 1);
     }
 }

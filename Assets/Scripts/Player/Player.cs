@@ -10,15 +10,15 @@ public class Player : MonoBehaviour
     BoxCollider2D box2D;
     CircleCollider2D cir2D;
 
-    [Tooltip("Player'ýn yürüme hýzýný belirler.")]
+    [Tooltip("Player'ï¿½n yï¿½rï¿½me hï¿½zï¿½nï¿½ belirler.")]
     [Range(0, 20)]
     public float playerSpeed = 15;
 
-    [Tooltip("Player zýpladýðýnda ne kadar yükseðe çýkacacaðýný belirler.")]
+    [Tooltip("Player zï¿½pladï¿½ï¿½ï¿½nda ne kadar yï¿½kseï¿½e ï¿½ï¿½kacacaï¿½ï¿½nï¿½ belirler.")]
     [Range(500, 1500)]
     public float jumpPower = 1000;
 
-    [Tooltip("Player 2. kez zýpladýðýnda ne kadar yükseðe çýkacacaðýný belirler.")]
+    [Tooltip("Player 2. kez zï¿½pladï¿½ï¿½ï¿½nda ne kadar yï¿½kseï¿½e ï¿½ï¿½kacacaï¿½ï¿½nï¿½ belirler.")]
     [Range(500, 1000)]
     public float doubleJumpPower = 600;
 
@@ -28,13 +28,13 @@ public class Player : MonoBehaviour
     // Player Scale
     bool facingRight = true;
 
-    [Tooltip("Player'ýn yerde olup olmadýðýnýn bilgisini tutar.")]
+    [Tooltip("Player'ï¿½n yerde olup olmadï¿½ï¿½ï¿½nï¿½n bilgisini tutar.")]
     public bool isGround = true;
 
     Transform groundCheck;
     const float GroundCheckRadius = .1f;
 
-    [Tooltip("Ground layer'ýný belirler.")]
+    [Tooltip("Ground layer'ï¿½nï¿½ belirler.")]
     public LayerMask groundLayer;
 
     // Anim Controller
@@ -117,7 +117,7 @@ public class Player : MonoBehaviour
 
         float horizontal = Input.GetAxis("Horizontal");
 
-        body2D.velocity = new Vector2(horizontal * playerSpeed, body2D.velocity.y);
+        body2D.linearVelocity = new Vector2(horizontal * playerSpeed, body2D.linearVelocity.y);
 
         Flip(horizontal);
 
@@ -154,8 +154,8 @@ public class Player : MonoBehaviour
 
     void UpdateAnimations()
     {
-        playerAnimController.SetFloat("VelocityX", Mathf.Abs(body2D.velocity.x));
-        playerAnimController.SetFloat("VelocityY", body2D.velocity.y);
+        playerAnimController.SetFloat("VelocityX", Mathf.Abs(body2D.linearVelocity.x));
+        playerAnimController.SetFloat("VelocityY", body2D.linearVelocity.y);
         playerAnimController.SetBool("isGround", isGround);
         playerAnimController.SetBool("isDead", isDead);
         if (isHurt && !isDead)
@@ -207,7 +207,7 @@ public class Player : MonoBehaviour
     {
         isHurt = false;
         body2D.AddForce(new Vector2(0, deadForce), ForceMode2D.Impulse);
-        body2D.drag = Time.deltaTime * 20;
+        body2D.linearDamping = Time.deltaTime * 20;
         deadForce -= Time.deltaTime * 25;
         body2D.constraints = RigidbodyConstraints2D.FreezePositionX;
         box2D.enabled = false;
