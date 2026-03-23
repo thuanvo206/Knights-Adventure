@@ -1,65 +1,45 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Fusion;
 
 public class GameManager : MonoBehaviour
 {
-
-    Player player;
+    Player localPlayer;
     public Slider healthBar;
-    bool isGamePaused = false;
-
     public GameObject pauseGame;
     public GameObject endingGame;
 
-    void Start()
-    {
-        player = FindObjectOfType<Player>();
-        healthBar.maxValue = player.maxPlayerHealth;
-    }
-   
     void Update()
     {
-        if (player.isDead)
+        // Tự động tìm Local Player nếu bị mất tham chiếu
+        if (localPlayer == null)
         {
-            Invoke("RestartGame", 0.4f);
+            NetworkRunner runner = FindFirstObjectByType<NetworkRunner>();
+            if (runner != null && runner.IsRunning)
+            {
+                var obj = runner.GetPlayerObject(runner.LocalPlayer);
+                if (obj != null) localPlayer = obj.GetComponent<Player>();
+            }
+            return;
         }
-        UpdateUI();
-    }
 
-    public void RestartGame()
-    {
-        Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scene.name);
-        Time.timeScale = 1.0f;
+        if (localPlayer.isDead)
+        {
+            Invoke("RestartGame", 1.0f);
+        }
+
+        UpdateUI();
     }
 
     void UpdateUI()
     {
-        healthBar.value = player.currentPlayerHealth;
-        if (player.currentPlayerHealth <= 0)
-            healthBar.minValue = 0;
+        healthBar.maxValue = localPlayer.maxPlayerHealth;
+        healthBar.value = localPlayer.currentPlayerHealth;
     }
 
-    public void PauseGame()
+    public void RestartGame()
     {
-        isGamePaused = !isGamePaused;
-
-        if (isGamePaused == true)
-        {
-            Time.timeScale = 0.0f;
-            pauseGame.SetActive(true);
-        }
-        else
-        {
-            Time.timeScale = 1.0f;
-            pauseGame.SetActive(false);
-        }     
-    }
-
-    public void ExitGame()
-    {
-        SceneManager.LoadScene("Scenes/OpeningScene");
-        Time.timeScale = 1.0f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

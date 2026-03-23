@@ -1,44 +1,55 @@
 using UnityEngine;
+using Fusion;
 
-public class EnemyHealth : MonoBehaviour
+public class EnemyHealth : NetworkBehaviour
 {
     public int maxEnemyHealth = 100;
-    public float currentEnemyHealth;
-    internal bool gotDamage;
-    public float playerDamageToEnemy;
+    
+    [Networked] 
+    public float currentEnemyHealth { get; set; }
+
+    public float playerDamageToEnemy = 25;
     public GameObject deathParticle;
-    SpriteRenderer spriteRenderer;
-    CircleCollider2D cir2D;
-    Rigidbody2D body2D;
 
-    Player player;
-
-    void Start()
+    public override void Spawned()
     {
-        currentEnemyHealth = maxEnemyHealth;
-        player = FindObjectOfType<Player>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        cir2D = GetComponent<CircleCollider2D>();
-        body2D = GetComponent<Rigidbody2D>();
-    }
-
-    void Update()
-    {
-        if (currentEnemyHealth <= 0)
+        // Khởi tạo máu trên máy chủ
+        if (Object.HasStateAuthority)
         {
-            spriteRenderer.enabled = false;
-            cir2D.enabled = false;
-            body2D.constraints = RigidbodyConstraints2D.FreezePositionX;
-            deathParticle.SetActive(true);
-            Destroy(gameObject, 1);
+            currentEnemyHealth = maxEnemyHealth;
         }
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "PlayerItem" && player.canDamage)
+        // Khi trúng vũ khí người chơi (Tag: PlayerItem)
+        if (other.CompareTag("PlayerItem"))
         {
-            currentEnemyHealth -= playerDamageToEnemy;
+            // Lấy component Player từ cha của vũ khí
+            Player p = other.GetComponentInParent<Player>();
+            
+            // Kiểm tra quyền Server để trừ máu
+            if (p != null && Object.HasStateAuthority)
+            {
+                currentEnemyHealth -= playerDamageToEnemy;
+                
+                if (currentEnemyHealth <= 0)
+                {
+                    Die();
+                }
+            }
         }
+    }
+
+    void Die()
+    {
+        // Hiệu ứng hạt (Particle)
+        if (deathParticle != null)
+        {
+            Instantiate(deathParticle, transform.position, Quaternion.identity);
+        }
+        
+        // Xóa quái khỏi hệ thống mạng
+        Runner.Despawn(Object);
     }
 }

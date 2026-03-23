@@ -1,217 +1,95 @@
 using UnityEngine;
-using TMPro;
+using Fusion;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour 
 {
-    internal Rigidbody2D body2D;
-    public float knockBackForce = 15000;
-
-    BoxCollider2D box2D;
-    CircleCollider2D cir2D;
-
-    [Tooltip("Player'�n y�r�me h�z�n� belirler.")]
-    [Range(0, 20)]
+    private Rigidbody2D body2D;
     public float playerSpeed = 15;
-
-    [Tooltip("Player z�plad���nda ne kadar y�kse�e ��kacaca��n� belirler.")]
-    [Range(500, 1500)]
-    public float jumpPower = 1000;
-
-    [Tooltip("Player 2. kez z�plad���nda ne kadar y�kse�e ��kacaca��n� belirler.")]
-    [Range(500, 1000)]
-    public float doubleJumpPower = 600;
-
-    internal bool canDoubleJump;
-    internal bool canDamage;
-
-    // Player Scale
-    bool facingRight = true;
-
-    [Tooltip("Player'�n yerde olup olmad���n�n bilgisini tutar.")]
-    public bool isGround = true;
-
-    Transform groundCheck;
-    const float GroundCheckRadius = .1f;
-
-    [Tooltip("Ground layer'�n� belirler.")]
+    public float jumpPower = 10;
+    
+    [Header("Ground Check")]
+    public bool isGround;
+    public Transform groundCheck;
     public LayerMask groundLayer;
+    const float GroundCheckRadius = .2f;
 
-    // Anim Controller
-    Animator playerAnimController;
+    private bool facingRight = true;
+    private Animator playerAnimController;
 
-    // Player Health
-    internal int maxPlayerHealth = 100;
-    public int currentPlayerHealth;
-    internal bool isHurt;
-    internal bool addHealth;
-    internal bool earnCoin;
-    GiveDamage giveDamage;
-    GiveHealth giveHealth;
+    // --- BIẾN ĐỒNG BỘ MẠNG (QUAN TRỌNG) ---
+    [Networked] public int currentPlayerHealth { get; set; } = 100;
+    [Networked] public int maxPlayerHealth { get; set; } = 100;
+    [Networked] public NetworkBool isDead { get; set; }
+    [Networked] public NetworkBool isHurt { get; set; }
+    [Networked] public NetworkBool earnCoin { get; set; }
+    [Networked] public NetworkBool addHealth { get; set; }
+    [Networked] public NetworkBool canDamage { get; set; } // Fix lỗi cho EnemyHealth
 
-    public int currentCoin = 0;
-    AddCoin addCoin;
+    [HideInInspector] public bool canDoubleJump; 
 
-    internal bool isDead;
-    public float deadForce = 5;
-
-    TextMeshProUGUI coinText;
-
-    AudioSource audioSource;
-    AudioClip audioJump;
-    AudioClip audioHurt;
-    AudioClip audioCoin;
-    AudioClip audioHealth;
-
-    void Start()
+    public override void Spawned()
     {
         body2D = GetComponent<Rigidbody2D>();
-        body2D.gravityScale = 5;
-        body2D.freezeRotation = true;
-        body2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-
-        box2D = GetComponent<BoxCollider2D>();
-        cir2D = GetComponent<CircleCollider2D>();
-
-        groundCheck = transform.Find("GroundCheck");
-
         playerAnimController = GetComponent<Animator>();
 
-        currentPlayerHealth = maxPlayerHealth;
-        giveDamage = FindObjectOfType<GiveDamage>();
-        giveHealth = FindObjectOfType<GiveHealth>();
-        addCoin = FindObjectOfType<AddCoin>();
-
-        coinText = GameObject.Find("HUD/CoinCanvas/CoinCounterText").GetComponent<TextMeshProUGUI>();
-
-        //Audio Paths
-        audioSource = GetComponent<AudioSource>();
-        audioJump = Resources.Load("Sounds/Jump") as AudioClip;
-        audioHurt = Resources.Load("Sounds/Hurt") as AudioClip;
-        audioCoin = Resources.Load("Sounds/Coin") as AudioClip;
-        audioHealth = Resources.Load("Sounds/Health") as AudioClip;
-    }
-
-    void Update()
-    {
-        UpdateAnimations();
-        ReduceHealth();
-        BoostHealth();
-        AddCoin();
-
-        isDead = currentPlayerHealth <= 0;
-
-        if (currentPlayerHealth > maxPlayerHealth)
+        if (Object.HasStateAuthority)
+        {
             currentPlayerHealth = maxPlayerHealth;
-
-        if (transform.position.y <= -6)
-            isDead = true;
-
-        if (isDead)
-            KillPlayer();
+            isDead = false;
+            canDamage = true; 
+        }
     }
 
-    void FixedUpdate()
+    public override void FixedUpdateNetwork()
     {
+        if (isDead) return;
+
         isGround = Physics2D.OverlapCircle(groundCheck.position, GroundCheckRadius, groundLayer);
 
-        float horizontal = Input.GetAxis("Horizontal");
+        if (GetInput(out BasicSpawner.NetworkInputData data))
+        {
+            body2D.linearVelocity = new Vector2(data.move.x * playerSpeed, body2D.linearVelocity.y);
 
-        body2D.linearVelocity = new Vector2(horizontal * playerSpeed, body2D.linearVelocity.y);
+            if (data.move.x > 0 && !facingRight) Flip();
+            else if (data.move.x < 0 && facingRight) Flip();
 
-        Flip(horizontal);
+            if (data.jump && isGround) Jump();
+        }
 
-        if (isGround)
-            canDamage = false;
+        if (Object.HasStateAuthority && currentPlayerHealth <= 0)
+        {
+            isDead = true;
+        }
+
+        UpdateAnimations();
     }
 
     public void Jump()
     {
-        body2D.AddForce(new Vector2(0, jumpPower));
-        audioSource.PlayOneShot(audioJump);
+        body2D.linearVelocity = new Vector2(body2D.linearVelocity.x, jumpPower); 
     }
 
-    public void DoubleJump()
+    public void DoubleJump() 
     {
-        body2D.AddForce(new Vector2(0, doubleJumpPower));
-        canDamage = true;
-        audioSource.PlayOneShot(audioJump);
+        body2D.linearVelocity = new Vector2(body2D.linearVelocity.x, jumpPower * 0.8f);
     }
 
-    void Flip(float horizontal)
+    void Flip()
     {
-        if (horizontal > 0 && !facingRight || horizontal < 0 && facingRight)
-        {
-            facingRight = !facingRight;
-
-            Vector2 theScale = transform.localScale;
-
-            theScale.x *= -1;
-
-            transform.localScale = theScale;
-        }
+        facingRight = !facingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
     }
 
     void UpdateAnimations()
     {
-        playerAnimController.SetFloat("VelocityX", Mathf.Abs(body2D.linearVelocity.x));
-        playerAnimController.SetFloat("VelocityY", body2D.linearVelocity.y);
-        playerAnimController.SetBool("isGround", isGround);
-        playerAnimController.SetBool("isDead", isDead);
-        if (isHurt && !isDead)
-            playerAnimController.SetTrigger("isHurt");
-    }
-
-    void ReduceHealth()
-    {
-        if (isHurt)
+        if (playerAnimController != null)
         {
-            currentPlayerHealth -= giveDamage.damage;
-            isHurt = false;
-            audioSource.PlayOneShot(audioHurt);
-
-            if (facingRight && !isGround)
-                body2D.AddForce(new Vector2(-knockBackForce, 1000), ForceMode2D.Force);
-            else if (!facingRight && !isGround)
-                body2D.AddForce(new Vector2(knockBackForce, 1000), ForceMode2D.Force);
-
-            if (facingRight && isGround)
-                body2D.AddForce(new Vector2(-knockBackForce, 0), ForceMode2D.Force);
-            else if (!facingRight && isGround)
-                body2D.AddForce(new Vector2(knockBackForce, 0), ForceMode2D.Force);
+            playerAnimController.SetFloat("VelocityX", Mathf.Abs(body2D.linearVelocity.x));
+            playerAnimController.SetBool("isGround", isGround);
+            playerAnimController.SetBool("isDead", (bool)isDead);
         }
-    }
-
-    void BoostHealth()
-    {
-        if (addHealth)
-        {
-            currentPlayerHealth += giveHealth.health;
-            addHealth = false;
-            audioSource.PlayOneShot(audioHealth);
-        }
-    }
-
-    void AddCoin()
-    {
-        if (earnCoin)
-        {
-            currentCoin += addCoin.coin;
-            coinText.text = currentCoin.ToString();
-            earnCoin = false;
-            audioSource.PlayOneShot(audioCoin);
-        }
-    }
-
-    void KillPlayer()
-    {
-        isHurt = false;
-        body2D.AddForce(new Vector2(0, deadForce), ForceMode2D.Impulse);
-        body2D.linearDamping = Time.deltaTime * 20;
-        deadForce -= Time.deltaTime * 25;
-        body2D.constraints = RigidbodyConstraints2D.FreezePositionX;
-        box2D.enabled = false;
-        cir2D.enabled = false;
-        audioSource.PlayOneShot(audioHurt);
     }
 }

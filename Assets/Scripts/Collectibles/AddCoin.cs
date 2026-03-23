@@ -1,21 +1,14 @@
 using UnityEngine;
+using Fusion;
 
 public class AddCoin : MonoBehaviour
 {
-    public int coin;
-    Player player;
+    public int coinValue = 1;
 
-    void Start()
-    {
-        player = FindObjectOfType<Player>();
+void OnTriggerEnter2D(Collider2D col) {
+    if (col.CompareTag("Player")) {
+        Player p = col.GetComponent<Player>();
+        if (p != null && p.Object.HasStateAuthority) { p.earnCoin = true; Destroy(gameObject); }
     }
-
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.tag == "Player")
-        {
-            player.earnCoin = true;
-            Destroy(gameObject);
-        }
-    }
+}
 }

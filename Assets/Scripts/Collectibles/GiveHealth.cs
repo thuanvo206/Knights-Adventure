@@ -1,23 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Fusion;
 
 public class GiveHealth : MonoBehaviour
 {
-    public int health;
-    Player player;
+    public int healthAmount = 20;
 
-    void Start()
-    {
-        player = FindObjectOfType<Player>();
-    }
-
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.tag == "Player")
-        {
-            player.addHealth = true;
+void OnTriggerEnter2D(Collider2D col) {
+    if (col.CompareTag("Player")) {
+        Player p = col.GetComponent<Player>();
+        if (p != null && p.Object.HasStateAuthority) {
+            p.currentPlayerHealth = Mathf.Min(p.currentPlayerHealth + 20, p.maxPlayerHealth);
             Destroy(gameObject);
         }
     }
+}
 }

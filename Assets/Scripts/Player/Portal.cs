@@ -1,28 +1,48 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Fusion; // Bắt buộc phải có dòng này
 
 public class Portal : MonoBehaviour
 {
-
-    GameManager gameManager;
-
-    private void Start()
-    {
-        gameManager = FindObjectOfType<GameManager>();
-    }
-
+    // Chúng ta dùng [Rpc] để đảm bảo khi 1 người chạm vào, 
+    // lệnh chuyển cảnh hoặc kết thúc sẽ chạy chính xác trên máy chủ (Host)
     void OnTriggerEnter2D(Collider2D collider)
     {
-        Scene scene = SceneManager.GetActiveScene();
-        if (collider.tag == "Player" && scene.name == "GameScene")
+        // Kiểm tra xem có đúng là Player chạm vào không
+        if (collider.CompareTag("Player"))
         {
-            SceneManager.LoadScene("Scenes/GameScene-2");
-            Time.timeScale = 1.0f;
+            NetworkRunner runner = FindFirstObjectByType<NetworkRunner>();
+
+            // Chỉ Server (Host) mới có quyền đổi màn chơi
+            if (runner != null && runner.IsServer)
+            {
+                // Lấy index của Scene hiện tại
+                int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+                if (currentSceneIndex == 1) 
+                {
+                    // Chuyển sang màn tiếp theo (Index 2)
+                    // Cách viết này cực kỳ an toàn cho mọi phiên bản Fusion
+                    SceneManager.LoadScene(2); 
+                }
+                else 
+                {
+                    // Nếu không phải màn 1, mặc định là màn cuối -> Hiện bảng kết thúc
+                    RPC_ShowEnding();
+                }
+            }
         }
-        else if (collider.tag == "Player" && scene.name == "GameScene-2")
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_ShowEnding()
+    {
+        // Tìm GameManager trong màn chơi để bật UI kết thúc
+        GameManager gm = FindFirstObjectByType<GameManager>();
+        if (gm != null && gm.endingGame != null)
         {
-            gameManager.endingGame.SetActive(true);
-            Time.timeScale = 0.0f;
+            gm.endingGame.SetActive(true);
+            // Trong mạng, không nên dùng Time.timeScale = 0 vì sẽ làm lag kết nối
         }
     }
 }
