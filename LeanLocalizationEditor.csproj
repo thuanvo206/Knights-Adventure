@@ -43,7 +43,7 @@
     <UnityVersion>6000.3.10f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Users\Thanh Tan\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.2.1\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="C:\Users\THUAN\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.2.1\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.10f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.10f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.10f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
@@ -612,6 +612,26 @@
       <HintPath>Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Lib\Editor\Unity.Plastic.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Fusion.Log">
+      <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Log.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="websocket-sharp">
+      <HintPath>Assets\Photon\PhotonLibs\WebSocket\websocket-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Fusion.Common">
+      <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NanoSockets">
+      <HintPath>Assets\Photon\Fusion\Plugins\NanoSockets\NanoSockets\Dynamic\NanoSockets.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Fusion.Sockets">
+      <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Sockets.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Lib\Editor\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
@@ -624,48 +644,28 @@
       <HintPath>Library\PackageCache\com.unity.collections@aea9d3bd5e19\Unity.Collections.Tests\System.IO.Hashing\System.IO.Hashing.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Fusion.Runtime">
+      <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="unityplastic">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Lib\Editor\unityplastic.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Library\PackageCache\com.unity.collections@aea9d3bd5e19\Unity.Collections.Tests\System.Runtime.CompilerServices.Unsafe\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NanoSockets">
-      <HintPath>Assets\Photon\Fusion\Plugins\NanoSockets\NanoSockets\Dynamic\NanoSockets.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Photon3Unity3D">
       <HintPath>Assets\Photon\PhotonLibs\netstandard2.0\Photon3Unity3D.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="websocket-sharp">
-      <HintPath>Assets\Photon\PhotonLibs\WebSocket\websocket-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Fusion.Sockets">
-      <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Sockets.dll</HintPath>
+    <Reference Include="Mono.Cecil">
+      <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Fusion.Realtime">
       <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Realtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Fusion.Runtime">
-      <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Fusion.Log">
-      <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Log.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Fusion.Common">
-      <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Common.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>Library\PackageCache\com.unity.collections@aea9d3bd5e19\Unity.Collections.Tests\System.Runtime.CompilerServices.Unsafe\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">
