@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 639098151589931008
-    m_Hash: 1075235957
+      ticks: 639098579210568011
+    m_Hash: 190119476
   m_LockFileStatus:
     m_FilePath: C:/Users/Thanh Tan/DoHoa/Knights-Adventure/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 639098126747289452
-    m_Hash: 275718071
+      ticks: 639098579210775806
+    m_Hash: 3624719969
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
@@ -2764,6 +2764,97 @@ m_ResolvedPackages:
     compatibilityLevel: 0
     minimumPackageVersion: 2.0.0
     minimumUnityVersion: 2019.2
+  compliance:
+    status: 0
+    violation:
+      scopePatternExpression: 
+      message: 
+      readMoreLink: 
+- packageId: com.veriorpies.parrelsync@https://github.com/VeriorPies/ParrelSync.git?path=/ParrelSync
+  testable: 0
+  isDirectDependency: 1
+  version: 1.5.2
+  source: 5
+  resolvedPath: C:\Users\Thanh Tan\DoHoa\Knights-Adventure\Library\PackageCache\com.veriorpies.parrelsync@256065af1fc7
+  assetPath: Packages/com.veriorpies.parrelsync
+  name: com.veriorpies.parrelsync
+  displayName: ParrelSync
+  author:
+    name: 
+    email: 
+    url: 
+  category: 
+  type: 
+  description: ParrelSync is a Unity editor extension that allows users to test multiplayer
+    gameplay without building the project by having another Unity editor window opened
+    and mirror the changes from the original project.
+  errors: []
+  versions:
+    all: []
+    compatible: []
+    recommended: 
+    deprecated: []
+  dependencies: []
+  resolvedDependencies: []
+  keywords:
+  - Networking
+  - Utils
+  - Editor
+  - Extensions
+  registry:
+    id: main
+    name: 
+    url: https://packages.unity.com
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+    compliance:
+      status: 0
+      violations: []
+  hideInEditor: 1
+  entitlements:
+    licensingModel: 0
+  isAssetStorePackage: 0
+  datePublishedTicks: 0
+  documentationUrl: 
+  hasRepository: 0
+  repository:
+    type: 
+    url: 
+    revision: 
+    path: 
+  unityLifecycle:
+    version: 
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+    isDiscoverable: 0
+  isDeprecated: 0
+  deprecationMessage: 
+  git:
+    hash: 610157ad762084380380148ba8ce14e266a6da97
+    revision: HEAD
+  upmReserved: 
+  signature:
+    status: 0
+    reason: 
+    attestation:
+      format: 
+      publishingChannel: 
+      entitlementKeys: []
+      ownerOrgName: 
+      ownerOrgId: 
+      publisherName: 
+    errorCode: 
+  assetStore:
+    productId: 
+  fingerprint: 256065af1fc7524b590b18830b21517b90e4e956
+  editorCompatibility:
+    compatibilityLevel: 0
+    minimumPackageVersion: 
+    minimumUnityVersion: 2018.4
   compliance:
     status: 0
     violation:
